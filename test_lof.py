@@ -8,10 +8,9 @@ instances = (
     (1, 2, 1, 1),
     (13, 13, 13, 13)
     )
-test_instance = (1, 1, 1, 2)
+instance = (1, 1, 1, 2)
 
-
-def test___normalize_instances():
+def test_LOF_normalize_instances():
     l = lof.LOF(((1,1),(2,2)), normalize=True)
     assert l.instances == [(0.0,0.0),(1.0,1.0)]
     l = lof.LOF(((1,1),(2,2),(3,3)), normalize=True)
@@ -22,15 +21,16 @@ def test_distance():
     
 def test_k_distance():
     instances = ((1,1),(2,2),(3,3))
-    l = lof.LOF(instances, normalize=False)
-    d = l.k_distance(1,(2,2),instances)
+    d = lof.k_distance(1,(2,2),instances)
     assert d == (0.0, [(2,2)])
-    d = l.k_distance(1,(2.2,2.2),instances)
+    d = lof.k_distance(1,(2.2,2.2),instances)
     assert d == (0.20000000000000018, [(2,2)])
-    d = l.k_distance(1,(2.5,2.5),instances)
+    d = lof.k_distance(1,(2.5,2.5),instances)
     assert d == (0.5, [(2,2),(3,3)])
     
 def test_reachability_distance():
     instances = ((1,1),(2,2),(3,3))
-    l = lof.LOF(instances, normalize=False)
-    l.reachability_distance(1, (1,1), (2,2), instances)
+    lof.reachability_distance(1, (1,1), (2,2), instances)
+    
+def test_outliers():
+    lof.outliers(1, instances)

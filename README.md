@@ -6,7 +6,6 @@ Python implementation of Local Outlier Factor algorithm by [Markus M. Breunig](h
 
 TODO
 -----
- * Remove the Numpy dependency
  * Increase the unit test coverage
  * Make it Python 3 compatible
 
