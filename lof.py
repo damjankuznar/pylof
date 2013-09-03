@@ -102,7 +102,7 @@ def k_distance(k, instance, instances, distance_function=distance_euclidean):
     distances = {}
     for instance2 in instances:
         distance_value = distance_function(instance, instance2)
-        if distances.has_key(distance_value):
+        if distance_value in distances:
             distances[distance_value].append(instance2)
         else:
             distances[distance_value] = [instance2]
