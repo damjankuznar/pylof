@@ -151,8 +151,8 @@ def outliers(k, instances, **kwargs):
     for i, instance in enumerate(instances_value_backup):
         instances = list(instances_value_backup)
         instances.remove(instance)
-        lof = LOF(instances, **kwargs)
-        value = lof.local_outlier_factor(k, instance)
+        l = LOF(instances, **kwargs)
+        value = l.local_outlier_factor(k, instance)
         if value > 1:
             outliers.append({"lof": value, "instance": instance, "index": i})
     outliers.sort(key=lambda o: o["lof"], reverse=True)
