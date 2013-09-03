@@ -7,5 +7,4 @@ Python implementation of Local Outlier Factor algorithm by [Markus M. Breunig](h
 TODO
 -----
  * Increase the unit test coverage
- * Make it Python 3 compatible
 
