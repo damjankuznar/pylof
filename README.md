@@ -98,7 +98,7 @@ instances = [
 from lof import outliers
 lof = outliers(5, instances)
 
-for outlier in result:
+for outlier in lof:
     print outlier["lof"],outlier["instance"]
 ```
 The output should be:
