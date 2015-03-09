@@ -18,7 +18,7 @@ def test_LOF_normalize_instances():
 
 def test_distance():
     assert 1 == lof.distance_euclidean((1,1), (2,2))
-    
+
 def test_k_distance():
     instances = ((1,1),(2,2),(3,3))
     d = lof.k_distance(1,(2,2),instances)
@@ -27,10 +27,18 @@ def test_k_distance():
     assert d == (0.20000000000000018, [(2,2)])
     d = lof.k_distance(1,(2.5,2.5),instances)
     assert d == (0.5, [(2,2),(3,3)])
-    
+
 def test_reachability_distance():
     instances = ((1,1),(2,2),(3,3))
     lof.reachability_distance(1, (1,1), (2,2), instances)
-    
+
 def test_outliers():
     lof.outliers(1, instances)
+
+if __name__ == "__main__":
+    print("Running tests, nothing more should appear if everything goes well.")
+    test_LOF_normalize_instances()
+    test_distance()
+    test_k_distance()
+    test_reachability_distance()
+    test_outliers()
