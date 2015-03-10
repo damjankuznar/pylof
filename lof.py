@@ -67,8 +67,8 @@ class LOF:
         min_values = [float("inf")] * len(self.instances[0]) #n.ones(len(self.instances[0])) * n.inf 
         max_values = [float("-inf")] * len(self.instances[0]) #n.ones(len(self.instances[0])) * -1 * n.inf
         for instance in self.instances:
-            min_values = map(lambda x,y: min(x,y), min_values,instance) #n.minimum(min_values, instance)
-            max_values = map(lambda x,y: max(x,y), max_values,instance) #n.maximum(max_values, instance)
+            min_values = tuple(map(lambda x,y: min(x,y), min_values,instance)) #n.minimum(min_values, instance)
+            max_values = tuple(map(lambda x,y: max(x,y), max_values,instance)) #n.maximum(max_values, instance)
         self.max_attribute_values = max_values
         self.min_attribute_values = min_values
             
