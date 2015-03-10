@@ -57,8 +57,26 @@ The output should be:
 2.28926007995  [10, 10]
 1.91195816119  [-8, -8]
 ```
-This example is also visualized on the following figure, where blue dots represent instances passed to LOF constructor, green dots are instances that are not outliers (lof value <= 1) and red dots are instances that are outliers (lof value > 1). The size or red dots represents the lof value, meaning that greater lof values result in larger dots.
+This example is also visualized on the following figure, where blue dots 
+represent instances passed to LOF constructor, green dots are instances that 
+are not outliers (lof value <= 1) and red dots are instances that are outliers 
+(lof value > 1). The size or red dots represents the lof value, meaning that 
+greater lof values result in larger dots.
 ![Plot](https://github.com/damjankuznar/pylof/raw/master/example1.png)
+Code used for plotting the above plot (matplotlib is required):
+```
+from matplotlib import pyplot as p
+
+x,y = zip(*instances)
+p.scatter(x,y, 20, color="#0000FF")
+
+for instance in [[0,0],[5,5],[10,10],[-8,-8]]:
+    value = lof.local_outlier_factor(3, instance)
+    color = "#FF0000" if value > 1 else "#00FF00"
+    p.scatter(instance[0], instance[1], color=color, s=(value-1)**2*10+20)
+
+p.show()
+```
 
 ### Example 2
 Pylof also has a helper function to identify outliers in a given instances dataset.
@@ -116,9 +134,27 @@ The output should be:
 1.04216295935 (-5.140089782376224, -1.3359248994019064)
 1.02801167935 (-0.5673059158944367, -5.585953296315335)
 ```
-This example is also visualized on the following figure, where blue dots represent instances passed to LOF constructor, green dots are instances that are not outliers (lof value <= 1) and red dots are instances that are outliers (lof value > 1). The size or red dots represents the lof value, meaning that greater lof values result in larger dots.
+This example is also visualized on the following figure, where blue dots 
+represent instances passed to LOF constructor, green dots are instances that 
+are not outliers (lof value <= 1) and red dots are instances that are outliers 
+(lof value > 1). The size or red dots represents the lof value, meaning that 
+greater lof values result in larger dots.
 ![Plot](https://github.com/damjankuznar/pylof/raw/master/example2.png)
+Code used for plotting the above plot (matplotlib is required):
+```
+from matplotlib import pyplot as p
 
+x,y = zip(*instances)
+p.scatter(x,y, 20, color="#0000FF")
+
+for outlier in lof:
+    value = outlier["lof"]
+    instance = outlier["instance"]
+    color = "#FF0000" if value > 1 else "#00FF00"
+    p.scatter(instance[0], instance[1], color=color, s=(value-1)**2*10+20)
+
+p.show()
+```
 TODO
 -----
  * Increase the unit test coverage
