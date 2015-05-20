@@ -82,7 +82,7 @@ class LOF:
         self.instances = new_instances
         
     def normalize_instance(self, instance):
-        return tuple(map(lambda value,max,min: (value-min)/(max-min), 
+        return tuple(map(lambda value,max,min: (value-min)/(max-min) if max-min > 0 else 0, 
                          instance, self.max_attribute_values, self.min_attribute_values))
         
     def local_outlier_factor(self, min_pts, instance):
