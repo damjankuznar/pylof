@@ -109,6 +109,7 @@ def k_distance(k, instance, instances, distance_function=distance_euclidean):
     distances = sorted(distances.items())
     neighbours = []
     [neighbours.extend(n[1]) for n in distances[:k]]
+    k_distance_value = distances[k - 1][0] if len(distances) >= k else distances[-1][0]
     return distances[k - 1][0], neighbours
 
 def reachability_distance(k, instance1, instance2, instances, distance_function=distance_euclidean):
