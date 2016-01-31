@@ -27,6 +27,8 @@ def test_k_distance():
     assert d == (0.20000000000000018, [(2,2)])
     d = lof.k_distance(1,(2.5,2.5),instances)
     assert d == (0.5, [(2,2),(3,3)])
+    d = lof.k_distance(5,(2.2,2.2),instances)
+    assert d == (1.2000000000000002, [(2, 2), (3, 3), (1, 1)])
 
 def test_reachability_distance():
     instances = ((1,1),(2,2),(3,3))
