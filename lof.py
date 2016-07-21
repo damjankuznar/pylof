@@ -11,6 +11,7 @@ This module implements the Local Outlier Factor algorithm.
 
 """
 from __future__ import division
+import warnings
 
 def distance_euclidean(instance1, instance2):
     """Computes the distance between two instances. Instances should be tuples of equal length.
@@ -64,14 +65,20 @@ class LOF:
             self.normalize_instances()
 
     def compute_instance_attribute_bounds(self):
-        min_values = [float("inf")] * len(self.instances[0]) #n.ones(len(self.instances[0])) * n.inf 
+        min_values = [float("inf")] * len(self.instances[0]) #n.ones(len(self.instances[0])) * n.inf
         max_values = [float("-inf")] * len(self.instances[0]) #n.ones(len(self.instances[0])) * -1 * n.inf
         for instance in self.instances:
             min_values = tuple(map(lambda x,y: min(x,y), min_values,instance)) #n.minimum(min_values, instance)
             max_values = tuple(map(lambda x,y: max(x,y), max_values,instance)) #n.maximum(max_values, instance)
+
+        diff = [dim_max - dim_min for dim_max, dim_min in zip(max_values, min_values)]
+        if not all(diff):
+            problematic_dimensions = ", ".join(str(i+1) for i, v in enumerate(diff) if v == 0)
+            warnings.warn("No data variation in dimensions: %s. You should check your data or disable normalization." % problematic_dimensions)
+
         self.max_attribute_values = max_values
         self.min_attribute_values = min_values
-            
+
     def normalize_instances(self):
         """Normalizes the instances and stores the infromation for rescaling new instances."""
         if not hasattr(self, "max_attribute_values"):
@@ -80,11 +87,11 @@ class LOF:
         for instance in self.instances:
             new_instances.append(self.normalize_instance(instance)) # (instance - min_values) / (max_values - min_values)
         self.instances = new_instances
-        
+
     def normalize_instance(self, instance):
-        return tuple(map(lambda value,max,min: (value-min)/(max-min) if max-min > 0 else 0, 
+        return tuple(map(lambda value,max,min: (value-min)/(max-min) if max-min > 0 else 0,
                          instance, self.max_attribute_values, self.min_attribute_values))
-        
+
     def local_outlier_factor(self, min_pts, instance):
         """The (local) outlier factor of instance captures the degree to which we call instance an outlier.
         min_pts is a parameter that is specifying a minimum number of instances to consider for computing LOF value.
@@ -120,15 +127,19 @@ def reachability_distance(k, instance1, instance2, instances, distance_function=
     return max([k_distance_value, distance_function(instance1, instance2)])
 
 def local_reachability_density(min_pts, instance, instances, **kwargs):
-    """Local reachability density of instance is the inverse of the average reachability 
+    """Local reachability density of instance is the inverse of the average reachability
     distance based on the min_pts-nearest neighbors of instance.
     Returns: local reachability density
     Signature: (int, (attr1, attr2, ...), ((attr_1_1, ...),(attr_2_1, ...), ...)) -> float"""
     (k_distance_value, neighbours) = k_distance(min_pts, instance, instances, **kwargs)
     reachability_distances_array = [0]*len(neighbours) #n.zeros(len(neighbours))
     for i, neighbour in enumerate(neighbours):
-        reachability_distances_array[i] = reachability_distance(min_pts, instance, neighbour, instances, **kwargs) 
-    return len(neighbours) / sum(reachability_distances_array)
+        reachability_distances_array[i] = reachability_distance(min_pts, instance, neighbour, instances, **kwargs)
+    if not any(reachability_distances_array):
+        warnings.warn("Instance %s (could be normalized) is identical to all the neighbors. Setting local reachability density to inf." % repr(instance))
+        return float("inf")
+    else:
+        return len(neighbours) / sum(reachability_distances_array)
 
 def local_outlier_factor(min_pts, instance, instances, **kwargs):
     """The (local) outlier factor of instance captures the degree to which we call instance an outlier.
