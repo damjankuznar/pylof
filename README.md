@@ -193,13 +193,17 @@ perf_results = {"Numpy": np.array([[20.0, 0.1287980079650879],
                 "Pure Python": np.array([[20, 3.3015658855438232],
                                          [50, 21.251996994018555],
                                          [100, 87.25664114952087],
-                                         [200, 453.45867109298706]])}
+                                         [200, 453.45867109298706],
+                                         [300, 1136.0742671489716]])}
 
 for label, results in perf_results.items():
     print label
     print results
     plt.plot(results[:, 0], results[:, 1], label=label)
 
+plt.xlabel("Number of instances")
+plt.ylabel("Execution time [sec]")
+plt.ylim([0, 200])
 plt.legend()
 plt.show()
 plt.close()
