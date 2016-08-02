@@ -63,6 +63,7 @@ are not outliers (lof value <= 1) and red dots are instances that are outliers
 (lof value > 1). The size or red dots represents the lof value, meaning that
 greater lof values result in larger dots.
 ![Plot](example1.png)
+
 Code used for plotting the above plot (matplotlib is required):
 ```python
 from matplotlib import pyplot as plt
@@ -141,6 +142,7 @@ are not outliers (lof value <= 1) and red dots are instances that are outliers
 (lof value > 1). The size or red dots represents the lof value, meaning that
 greater lof values result in larger dots.
 ![Plot](example2.png)
+
 Code used for plotting the above plot (matplotlib is required):
 ```python
 from matplotlib import pyplot as plt
@@ -171,6 +173,8 @@ was used in these tests is available in `tests/dataset.csv` file. As can be seen
 the pure Python implementation is plotted only for up to 100 instances, due to
 the high computation time.
 ![Plot](performance.png)
+
+Code used for plotting the above plot (matplotlib is required):
 ```python
 from matplotlib import pyplot as plt
 import numpy as np
