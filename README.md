@@ -10,7 +10,7 @@ Examples
 ### Example 1
 
 The following example illustrates the simple use case of computing LOF values of several instances (e.g. `[0,0],[5,5],[10,10] and [-8,-8]`) based on the `instances` variable that we pass to the `LOF` constructor.
-```
+```python
 instances = [
  (-4.8447532242074978, -5.6869538132901658),
  (1.7265577109364076, -2.5446963280374302),
@@ -57,30 +57,31 @@ The output should be:
 2.28926007995  [10, 10]
 1.91195816119  [-8, -8]
 ```
-This example is also visualized on the following figure, where blue dots 
-represent instances passed to LOF constructor, green dots are instances that 
-are not outliers (lof value <= 1) and red dots are instances that are outliers 
-(lof value > 1). The size or red dots represents the lof value, meaning that 
+This example is also visualized on the following figure, where blue dots
+represent instances passed to LOF constructor, green dots are instances that
+are not outliers (lof value <= 1) and red dots are instances that are outliers
+(lof value > 1). The size or red dots represents the lof value, meaning that
 greater lof values result in larger dots.
-![Plot](https://github.com/damjankuznar/pylof/raw/master/example1.png)
+![Plot](example1.png)
 Code used for plotting the above plot (matplotlib is required):
-```
-from matplotlib import pyplot as p
+```python
+from matplotlib import pyplot as plt
+
+plt.style.use('ggplot')
 
 x,y = zip(*instances)
-p.scatter(x,y, 20, color="#0000FF")
+plt.scatter(x,y, 20, color="#0000FF")
 
 for instance in [[0,0],[5,5],[10,10],[-8,-8]]:
     value = lof.local_outlier_factor(3, instance)
     color = "#FF0000" if value > 1 else "#00FF00"
-    p.scatter(instance[0], instance[1], color=color, s=(value-1)**2*10+20)
-
-p.show()
+    plt.scatter(instance[0], instance[1], color=color, s=(value-1)**2*10+20)
+plt.show()
 ```
 
 ### Example 2
 Pylof also has a helper function to identify outliers in a given instances dataset.
-```
+```python
 instances = [
  (-4.8447532242074978, -5.6869538132901658),
  (1.7265577109364076, -2.5446963280374302),
@@ -134,27 +135,76 @@ The output should be:
 1.04216295935 (-5.140089782376224, -1.3359248994019064)
 1.02801167935 (-0.5673059158944367, -5.585953296315335)
 ```
-This example is also visualized on the following figure, where blue dots 
-represent instances passed to LOF constructor, green dots are instances that 
-are not outliers (lof value <= 1) and red dots are instances that are outliers 
-(lof value > 1). The size or red dots represents the lof value, meaning that 
+This example is also visualized on the following figure, where blue dots
+represent instances passed to LOF constructor, green dots are instances that
+are not outliers (lof value <= 1) and red dots are instances that are outliers
+(lof value > 1). The size or red dots represents the lof value, meaning that
 greater lof values result in larger dots.
-![Plot](https://github.com/damjankuznar/pylof/raw/master/example2.png)
+![Plot](example2.png)
 Code used for plotting the above plot (matplotlib is required):
-```
-from matplotlib import pyplot as p
+```python
+from matplotlib import pyplot as plt
+
+plt.style.use('ggplot')
 
 x,y = zip(*instances)
-p.scatter(x,y, 20, color="#0000FF")
+plt.scatter(x,y, 20, color="#0000FF")
 
 for outlier in lof:
     value = outlier["lof"]
     instance = outlier["instance"]
     color = "#FF0000" if value > 1 else "#00FF00"
-    p.scatter(instance[0], instance[1], color=color, s=(value-1)**2*10+20)
+    plt.scatter(instance[0], instance[1], color=color, s=(value-1)**2*10+20)
 
-p.show()
+plt.show()
 ```
+
+Performance
+-----------
+Currently there are two implementations of pylof. One that is implemented in
+pure Python and one using Numpy to do most of the computations. Not
+surprisingly, the Numpy implementation is much faster, however, both could be
+further optimized (contributions welcomed). Bellow is a figure comparing the
+two implementations with respect to the instance count and time consumed. The
+number of instance features (dimensions) is constant - 10. The data set that
+was used in these tests is available in `tests/dataset.csv` file. As can be seen
+the pure Python implementation is plotted only for up to 100 instances, due to
+the high computation time.
+![Plot](performance.png)
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+plt.style.use('ggplot')
+
+# results of running performance.py script
+perf_results = {"Numpy": np.array([[20.0, 0.1287980079650879],
+                                   [50.0, 0.35866403579711914],
+                                   [100.0, 0.8581411838531494],
+                                   [200.0, 2.254122018814087],
+                                   [300.0, 4.200999021530151],
+                                   [400.0, 6.708652019500732],
+                                   [500.0, 10.184601068496704],
+                                   [600.0, 13.382768869400024],
+                                   [700.0, 17.746567964553833],
+                                   [800.0, 22.217625856399536],
+                                   [900.0, 26.926273822784424],
+                                   [1000.0, 32.60432696342468]]),
+                "Pure Python": np.array([[20, 3.3015658855438232],
+                                         [50, 21.251996994018555],
+                                         [100, 87.25664114952087],
+                                         [200, 453.45867109298706]])}
+
+for label, results in perf_results.items():
+    print label
+    print results
+    plt.plot(results[:, 0], results[:, 1], label=label)
+
+plt.legend()
+plt.show()
+plt.close()
+```
+
 TODO
 -----
  * Increase the unit test coverage
